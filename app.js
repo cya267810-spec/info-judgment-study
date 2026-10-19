@@ -711,7 +711,6 @@
     app.innerHTML = '<div class="card"><h2>施測者設定（' + esc(C.MODES[MODE].label) + '）</h2>' +
       (warn ? '<p class="bad">' + esc(warn) + '</p>' : '') +
       '<p class="small">參與者編號由系統自動依序發給（按「開始」時向雲端取得），不用輸入。</p>' +
-      '<div class="q"><div class="qtext">施測者代號</div><input type="text" id="exper" autocomplete="off" value="' + esc(ls('exp:lastExper') || '') + '"></div>' +
       '<div class="q" id="manualBox" hidden><div class="qtext">參與者編號（手動輸入，僅在無法連線時使用）</div><input type="text" id="pid" autocomplete="off"></div>' +
       '<p class="small"><a href="#" id="manualLink">無法連線時改用手動輸入編號</a></p>' +
       '<div class="navrow"><span class="navmsg" id="navmsg"></span><button class="btn" id="start">開始</button></div></div>' +
@@ -732,7 +731,6 @@
       var table = (window.ASSIGNMENT || {})[MODE] || {}, msg = $('#navmsg');
       if (!table[pid]) { msg.textContent = '編號 ' + pid + ' 不在' + C.MODES[MODE].label + '名單內（名單已發完或輸入錯誤），請聯絡研究者。'; return false; }
       if (done.indexOf(pid) >= 0 || ls('exp:rec:' + MODE + ':' + pid)) { msg.textContent = '此電腦已使用過編號 ' + pid + '，請確認。'; return false; }
-      ls('exp:lastExper', ex);
       rec = newRecord(pid, ex, table[pid]); ls(KEY_CUR, { mode: MODE, pid: pid }); save();
       enterExperiment(); return true;
     }
@@ -746,9 +744,8 @@
         .then(function (j) { if (!j || !j.ok || !j.pid) throw new Error((j && j.error) || 'bad'); return j.pid; });
     }
     $('#start').onclick = function () {
-      var ex = $('#exper').value.trim(), msg = $('#navmsg'), btn = $('#start');
+      var ex = '', msg = $('#navmsg'), btn = $('#start');  // 只有研究者一人施測，不記施測者代號（2026-10-19）
       var manual = $('#manualBox').hidden ? '' : $('#pid').value.trim().toUpperCase();
-      if (!ex) { msg.textContent = '請輸入施測者代號。'; return; }
       if (manual) { startWith(manual, ex); return; }
       if (!CFG.DATA_ENDPOINT) { msg.textContent = '尚未設定雲端網址，無法自動發號，請改用手動輸入編號。'; return; }
       btn.disabled = true; msg.textContent = '正在取得參與者編號…';
