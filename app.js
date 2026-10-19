@@ -710,8 +710,10 @@
     var tc = window.TEXT_CHECK;
     app.innerHTML = '<div class="card"><h2>施測者設定（' + esc(C.MODES[MODE].label) + '）</h2>' +
       (warn ? '<p class="bad">' + esc(warn) + '</p>' : '') +
-      '<div class="q"><div class="qtext">參與者編號</div><input type="text" id="pid" autocomplete="off"></div>' +
+      '<p class="small">參與者編號由系統自動依序發給（按「開始」時向雲端取得），不用輸入。</p>' +
       '<div class="q"><div class="qtext">施測者代號</div><input type="text" id="exper" autocomplete="off" value="' + esc(ls('exp:lastExper') || '') + '"></div>' +
+      '<div class="q" id="manualBox" hidden><div class="qtext">參與者編號（手動輸入，僅在無法連線時使用）</div><input type="text" id="pid" autocomplete="off"></div>' +
+      '<p class="small"><a href="#" id="manualLink">無法連線時改用手動輸入編號</a></p>' +
       '<div class="navrow"><span class="navmsg" id="navmsg"></span><button class="btn" id="start">開始</button></div></div>' +
       '<div class="card tools"><b>施測者工具</b><table>' +
       '<tr><td>文本檢查</td><td>' + (tc && tc.ok ? '<span class="ok">通過（六版各 400 字）</span>' : '<span class="bad">未通過：' + esc(tc ? tc.messages.join('；') : '未執行') + '</span>') + '</td></tr>' +
@@ -725,15 +727,38 @@
       '<tr><td>Email 檢查待確認</td><td>' + pend + ' 人</td></tr></table>' +
       '<button class="btn secondary" id="exportAll">匯出本機全部作答資料</button> ' +
       '<button class="btn secondary" id="wipe">刪除本機全部作答資料</button></div>';
-    $('#start').onclick = function () {
-      var pid = $('#pid').value.trim().toUpperCase(), ex = $('#exper').value.trim(), msg = $('#navmsg');
-      var table = (window.ASSIGNMENT || {})[MODE] || {};
-      if (!ex) { msg.textContent = '請輸入施測者代號。'; return; }
-      if (!table[pid]) { msg.textContent = '編號不在' + C.MODES[MODE].label + '名單內，請確認。'; return; }
-      if (done.indexOf(pid) >= 0 || ls('exp:rec:' + MODE + ':' + pid)) { msg.textContent = '此電腦已使用過這個編號，請確認。'; return; }
+    $('#manualLink').onclick = function (e) { e.preventDefault(); $('#manualBox').hidden = false; $('#pid').focus(); };
+    function startWith(pid, ex) {
+      var table = (window.ASSIGNMENT || {})[MODE] || {}, msg = $('#navmsg');
+      if (!table[pid]) { msg.textContent = '編號 ' + pid + ' 不在' + C.MODES[MODE].label + '名單內（名單已發完或輸入錯誤），請聯絡研究者。'; return false; }
+      if (done.indexOf(pid) >= 0 || ls('exp:rec:' + MODE + ':' + pid)) { msg.textContent = '此電腦已使用過編號 ' + pid + '，請確認。'; return false; }
       ls('exp:lastExper', ex);
       rec = newRecord(pid, ex, table[pid]); ls(KEY_CUR, { mode: MODE, pid: pid }); save();
-      enterExperiment();
+      enterExperiment(); return true;
+    }
+    // 自動發號（2026-10-19）：向作答資料 Apps Script 取得下一個編號。請求代碼存在本機，網路逾時後重按「開始」會拿回同一個編號。
+    function claimPid(ex) {
+      var req = ls('exp:claimReq:' + MODE) || uid(); ls('exp:claimReq:' + MODE, req);
+      var ctl = new AbortController(); var tm = setTimeout(function () { ctl.abort(); }, 15000);
+      return fetch(CFG.DATA_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ secret: CFG.SHARED_SECRET, kind: 'claim', mode: MODE, exp: ex, req: req }), signal: ctl.signal })
+        .then(function (r) { clearTimeout(tm); return r.json(); })
+        .then(function (j) { if (!j || !j.ok || !j.pid) throw new Error((j && j.error) || 'bad'); return j.pid; });
+    }
+    $('#start').onclick = function () {
+      var ex = $('#exper').value.trim(), msg = $('#navmsg'), btn = $('#start');
+      var manual = $('#manualBox').hidden ? '' : $('#pid').value.trim().toUpperCase();
+      if (!ex) { msg.textContent = '請輸入施測者代號。'; return; }
+      if (manual) { startWith(manual, ex); return; }
+      if (!CFG.DATA_ENDPOINT) { msg.textContent = '尚未設定雲端網址，無法自動發號，請改用手動輸入編號。'; return; }
+      btn.disabled = true; msg.textContent = '正在取得參與者編號…';
+      claimPid(ex).then(function (pid) {
+        localStorage.removeItem('exp:claimReq:' + MODE);
+        if (!startWith(pid, ex)) btn.disabled = false;
+      }).catch(function () {
+        btn.disabled = false;
+        msg.textContent = '無法取得編號，請確認網路後再按一次「開始」；若一直失敗，請改用手動輸入編號。';
+      });
     };
     $('#exportAll').onclick = function () {
       var all = {}; Object.keys(localStorage).filter(function (k) { return k.indexOf('exp:rec:') === 0; }).forEach(function (k) { all[k] = ls(k); });

@@ -186,3 +186,6 @@ input[type=range].untouched::-moz-range-thumb{opacity:0}
 .jv .post .dom{font-size:11px;color:#888}
 .jv .jphone{margin:8px auto 0}
 .jv .photoimg{width:180px;border-radius:10px;display:block}
+
+/* 施測者頁說明小字（2026-10-19 自動發號） */
+p.small{font-size:15px;color:var(--muted);margin:4px 0 10px}
