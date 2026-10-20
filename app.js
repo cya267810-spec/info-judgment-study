@@ -12,14 +12,14 @@
   var KEY_CUR = 'exp:current', KEY_Q = 'exp:queue';
 
   /* ---------------- 流程 ---------------- */
-  /* 依第三章 v11：研究一步驟 1–5、研究二步驟 1–8（圖 3-2）；前測依研究二程序並加 T0、機制深度檢核與處理流暢度（第二節五） */
+  /* 依第三章 v11：研究一步驟 1–5、研究二步驟 1–8（圖 3-2）；前測依研究二程序並加 T0與機制深度檢核（第二節五；處理流暢度 2026-10-20 刪除） */
   var BASE = ['P1', 'P2a', 'P2b', 'P2c', 'P3a', 'P3b', 'P4a', 'P4b', 'P5', 'P6', 'P7'];
   var FLOWS = {
-    pretest: BASE.concat(['T0', 'P8', 'P9', 'P10', 'CLr', 'T1', 'P13', 'T1b', 'P16', 'T2', 'P14i', 'P14', 'CLj', 'P18', 'P19']),
+    pretest: BASE.concat(['T0', 'P8', 'P9', 'CLr', 'T1', 'P13', 'T1b', 'P16', 'T2', 'P14i', 'P14', 'CLj', 'P18', 'P19']),
     s1: BASE.concat(['P8', 'CLr', 'P14i', 'P14s', 'P14', 'CLj', 'P18', 'P19']),
     s2: BASE.concat(['P8', 'CLr', 'T1', 'P13', 'T1b', 'P16', 'T2', 'P14i', 'P14s', 'P14', 'CLj', 'P18', 'P19'])
   };
-  var ALL_PAGES = ['P1', 'P2a', 'P2b', 'P2c', 'P3a', 'P3b', 'P4a', 'P4b', 'P5', 'P6', 'P7', 'T0', 'P8', 'P9', 'P10', 'CLr', 'T1', 'P13', 'T1b', 'P16', 'T2', 'P14i', 'P14s', 'P14', 'CLj', 'P18'];
+  var ALL_PAGES = ['P1', 'P2a', 'P2b', 'P2c', 'P3a', 'P3b', 'P4a', 'P4b', 'P5', 'P6', 'P7', 'T0', 'P8', 'P9', 'CLr', 'T1', 'P13', 'T1b', 'P16', 'T2', 'P14i', 'P14s', 'P14', 'CLj', 'P18'];
 
   /* ---------------- 小工具 ---------------- */
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -103,7 +103,7 @@
     P4a: ['第一部分 · 金融常識', '幾題金融常識（1/2）'], P4b: ['第一部分 · 金融常識', '幾題金融常識（2/2）'], P5: ['第一部分 · 基本資料', '再一題'],
     P6: ['第二部分 · 情境', '一個生活情境'], P7: ['第二部分 · 情境', '作答前的預估'],
     T0: ['第二部分 · 情境', '你的理解'],
-    P8: ['第三部分 · AI 分析', 'AI 助理的回覆'], P9: ['第三部分 · 閱讀後回饋', '你對這段 AI 分析的看法'], P10: ['第三部分 · 閱讀後回饋', '閱讀的感受'],
+    P8: ['第三部分 · AI 分析', 'AI 助理的回覆'], P9: ['第三部分 · 閱讀後回饋', '你對這段 AI 分析的看法'],
     CLr: ['第三部分 · 閱讀後回饋', '剛才閱讀的過程'], T1: ['第三部分 · 閱讀後回饋', '你的理解'], P13: ['第三部分 · 閱讀後回饋', '作答前的預估'],
     T1b: ['第三部分 · 閱讀後回饋', '你的理解'], P16: ['第三部分 · 閱讀後回饋', '寫下你的想法'], T2: ['第三部分 · 閱讀後回饋', '你的理解'],
     P14i: ['第四部分 · 換你判斷', '判斷投資訊息'], P14s: ['第四部分 · 換你判斷', '判斷投資訊息'], P14: ['第四部分 · 換你判斷', '判斷投資訊息'],
@@ -388,17 +388,27 @@
     });
   };
 
+  function withOther(it) {   // 「其他答案」放在「不知道」之前，與 OECD 原題 d) 的位置一致
+    if (!it.other) return it.opts;
+    var k = it.opts.indexOf(C.FINLIT.dk); if (k < 0) k = it.opts.length;
+    return it.opts.slice(0, k).concat([it.other], it.opts.slice(k));
+  }
   function finlitPage(code, items, withIntro) {
     var F = C.FINLIT, html = withIntro ? '<p>' + esc(F.intro) + '</p>' : '', tfShown = false;
     items.forEach(function (it) {
       if (it.type === 'tf' && !tfShown) { html += '<p class="qtext">' + esc(F.tfStem) + '</p>'; tfShown = true; }
-      if (it.type === 'choice') html += qBlock(it.id, optList(it.id, it.opts), esc(it.q));
+      if (it.type === 'choice') html += qBlock(it.id, optList(it.id, withOther(it)) +
+        (it.other ? '<div class="inline other" id="ow_' + it.id + '" hidden><input type="text" id="o_' + it.id + '" maxlength="200"></div>' : ''), esc(it.q));
       else if (it.type === 'tf') html += qBlock(it.id, optList(it.id, F.tfOpts, true), esc(it.q));
       else html += qBlock(it.id, '<div class="inline"><input type="number" id="n_' + it.id + '" step="any"><span>' + esc(it.unit) + '</span>' +
         '<label class="dk"><input type="checkbox" id="dk_' + it.id + '"> ' + esc(F.dk) + '</label></div>', esc(it.q));
     });
     app.innerHTML = '<div class="card">' + html + navHTML() + '</div>';
-    bindOpts(app);
+    bindOpts(app, function (id) {
+      items.filter(function (it) { return it.other && it.id === id; }).forEach(function (it) {
+        var on = cur[id] === it.other; $('#ow_' + id).hidden = !on; if (on) $('#o_' + id).focus(); else $('#o_' + id).value = '';
+      });
+    });
     items.filter(function (it) { return it.type === 'number'; }).forEach(function (it) {
       var n = $('#n_' + it.id), dk = $('#dk_' + it.id);
       n.addEventListener('input', function () { cur[it.id] = n.value === '' ? undefined : Number(n.value); });
@@ -408,8 +418,10 @@
     });
     onNext(function () {
       if (!requireIds(items.map(function (it) { return it.id; }))) return;
-      var d = {}; items.forEach(function (it) { d[it.id] = cur[it.id]; });
-      if (code === 'P4b') {   // 兩頁合計計分
+      var oMiss = items.filter(function (it) { return it.other && cur[it.id] === it.other && !$('#o_' + it.id).value.trim(); });
+      if (oMiss.length) { $('[data-q="' + oMiss[0].id + '"]').classList.add('missing'); $('#navmsg').textContent = C.MISSING; return; }
+      var d = {}; items.forEach(function (it) { d[it.id] = cur[it.id]; if (it.other) d[it.id + '_other'] = cur[it.id] === it.other ? $('#o_' + it.id).value.trim() : ''; });
+      if (code === 'P4b') {   // 兩頁合計計分（QK3 選「其他答案」者暫計 0 分，待研究者判定 QK3_other 是否屬 OECD 的 d)）
         var all = Object.assign({}, rec.data.P4a || {}, d), score = 0, okv = {};
         F.items.forEach(function (it) { okv[it.id] = all[it.id] === it.correct ? 1 : 0; score += okv[it.id]; });
         d.finlit_score = score; d.finlit_score_qk6cond = score - (okv.QK6 && !okv.QK5 ? 1 : 0);
@@ -483,27 +495,6 @@
       M.items.forEach(function (it) { d[it.id] = M.score[cur[it.id]]; d[it.id + '_resp'] = cur[it.id]; });
       d.MC_check = mean(M.items.map(function (it) { return d[it.id]; }));  // 7 題平均（第三章第二節三（六））
       finishPage('P9', d);
-    });
-  };
-
-  PAGES.P10 = function () {
-    var Fl = C.FLUENCY, order = stableOrder('P10', Fl.items);
-    app.innerHTML = '<div class="card"><p class="qtext">' + esc(Fl.stem) + '</p>' +
-      order.map(function (it) {
-        return qBlock(it.id, '<div class="slider-wrap"><span class="lab">' + esc(it.left) + '</span>' +
-          '<input type="range" class="untouched" min="1" max="101" step="1" value="51" data-id="' + it.id + '">' +
-          '<span class="lab r">' + esc(it.right) + '</span></div>');
-      }).join('') + navHTML() + '</div>';
-    $$('input[type=range]').forEach(function (r) {
-      var set = function () { r.classList.remove('untouched'); cur[r.dataset.id] = Number(r.value); r.closest('.q').classList.remove('missing'); };
-      r.addEventListener('pointerdown', set); r.addEventListener('input', set); r.addEventListener('change', set);
-    });
-    onNext(function () {
-      if (!requireIds(Fl.items.map(function (i) { return i.id; }))) return;
-      var d = { FL_order: order.map(function (i) { return i.id; }).join('|') };
-      Fl.items.forEach(function (it) { d[it.id] = cur[it.id]; });
-      d.FL_mean = mean(Fl.items.map(function (it) { return d[it.id]; }));
-      finishPage('P10', d);
     });
   };
 
@@ -653,10 +644,10 @@
     C.AIUSE.tools.forEach(function (tl) { cols.push(toolKey(tl)); });
     cols.push('tool_none');
     cols = cols.concat(['tool_other_text', 'AC2_resp', 'AC2_pass', 'QD1', 'status', 'industry', 'A3', 'B30', 'invest_exp',
-      'QK3', 'QK4', 'QK5', 'QK6', 'QK7_1', 'QK7_2', 'QK7_3', 'finlit_score', 'finlit_score_qk6cond', 'AC1_resp', 'AC1_pass',
+      'QK3', 'QK3_other', 'QK4', 'QK5', 'QK6', 'QK7_1', 'QK7_2', 'QK7_3', 'finlit_score', 'finlit_score_qk6cond', 'AC1_resp', 'AC1_pass',
       'baseline_pred', 'self_T0', 't_explanation']);
     C.MC.items.forEach(function (it) { cols.push(it.id); });
-    cols = cols.concat(['MC_check', 'MC_order', 'FL1', 'FL2', 'FL3', 'FL4', 'FL5', 'FL_mean', 'FL_order']);
+    cols = cols.concat(['MC_check', 'MC_order']);
     C.KRELL.items.forEach(function (it) { cols.push('CLr_' + it.n); });
     cols = cols.concat(['CLr_ML', 'CLr_ME', 'self_T1', 'expected_pred', 'self_T1b', 'self_expl_text', 'self_expl_chars', 'self_T2', 'standard_k']);
     POOL_IDS.forEach(function (id) { cols.push('J_' + id, 'J_prob_' + id, 'J_correct_' + id, 'J_rt_' + id, 'J_pos_' + id); });
