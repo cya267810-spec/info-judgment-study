@@ -97,7 +97,8 @@ window.CONTENT = {
     toolsQ: "過去 12 個月內，你使用過下列哪些生成式AI工具？（可複選）",
     tools: ["ChatGPT（OpenAI）", "Google Gemini", "Meta AI", "Microsoft Copilot", "Claude（Anthropic）", "Grok（xAI）", "DeepSeek", "Perplexity"],
     otherLabel: "其他（請寫出名稱）：",
-    toolsErr: "請至少勾選一項，或在「其他」寫出名稱。",
+    noneLabel: "都沒有——過去 12 個月沒有使用任何 AI 工具",   // Verasight（2026）第 2 題的「None」選項，時間範圍改為 12 個月（2026-10-20 依研究者決定保留）
+    toolsErr: "請至少勾選一項、在「其他」寫出名稱，或勾選「都沒有」。",
     ac2Q: "為了確保資料品質，這一題請選「每月」。",
     ac2Correct: "每月"
   },

@@ -317,7 +317,8 @@
     var A = C.AIUSE;
     var toolsHTML = '<div class="opts">' + A.tools.map(function (tl, k) {
       return '<label class="check"><input type="checkbox" class="tool" data-k="' + k + '"> ' + esc(tl) + '</label>';
-    }).join('') + '<div class="inline other"><span>' + esc(A.otherLabel) + '</span><input type="text" id="toolOther" autocomplete="off"></div></div>';
+    }).join('') + '<div class="inline other"><span>' + esc(A.otherLabel) + '</span><input type="text" id="toolOther" autocomplete="off"></div>' +
+      '<label class="check"><input type="checkbox" id="toolNone"> ' + esc(A.noneLabel) + '</label></div>';
     app.innerHTML = '<div class="card">' +
       qBlock('ai_freq', optList('ai_freq', A.freqOpts), esc(A.freqQ)) +
       '<div id="aiMore" hidden>' + qBlock('tools', toolsHTML, esc(A.toolsQ)) +
@@ -325,11 +326,16 @@
       navHTML() + '</div>';
     bindOpts(app, function (id) { if (id === 'ai_freq') $('#aiMore').hidden = cur.ai_freq === A.never; });
     var toolsDone = function () {
-      var any = $$('input.tool').some(function (c) { return c.checked; }) || $('#toolOther').value.trim() !== '';
+      var any = $$('input.tool').some(function (c) { return c.checked; }) || $('#toolOther').value.trim() !== '' || $('#toolNone').checked;
       cur.tools = any ? 1 : undefined; if (any) $('[data-q="tools"]').classList.remove('missing');
     };
-    $$('input.tool').forEach(function (c) { c.addEventListener('change', toolsDone); });
-    $('#toolOther').addEventListener('input', toolsDone);
+    // 「都沒有」與其他選項互斥：勾選「都沒有」時清除其他勾選與文字；勾選其他工具時取消「都沒有」
+    $$('input.tool').forEach(function (c) { c.addEventListener('change', function () { if (c.checked) $('#toolNone').checked = false; toolsDone(); }); });
+    $('#toolOther').addEventListener('input', function () { if ($('#toolOther').value.trim()) $('#toolNone').checked = false; toolsDone(); });
+    $('#toolNone').addEventListener('change', function () {
+      if ($('#toolNone').checked) { $$('input.tool').forEach(function (c) { c.checked = false; }); $('#toolOther').value = ''; }
+      toolsDone();
+    });
     onNext(function () {
       var users = cur.ai_freq && cur.ai_freq !== A.never;
       if (!requireIds(users ? ['ai_freq', 'tools', 'AC2'] : ['ai_freq'])) {
@@ -340,6 +346,7 @@
       if (users) {
         $$('input.tool').forEach(function (c) { d[toolKey(A.tools[+c.dataset.k])] = c.checked ? 1 : 0; });
         d.tool_other_text = $('#toolOther').value.trim();
+        d.tool_none = $('#toolNone').checked ? 1 : 0;
         d.AC2_resp = cur.AC2; d.AC2_pass = cur.AC2 === A.ac2Correct ? 1 : 0;
       }
       if (!users) { rec.data.P2c = d; sendPage('P2c', d); goTerminal('screen', 'no_genai'); return; }
@@ -644,6 +651,7 @@
       'screened_out', 'screen_reason', 'refreshes', 'age'];
     cols = cols.concat(['ai_freq', 'ai_freq_score']);
     C.AIUSE.tools.forEach(function (tl) { cols.push(toolKey(tl)); });
+    cols.push('tool_none');
     cols = cols.concat(['tool_other_text', 'AC2_resp', 'AC2_pass', 'QD1', 'status', 'industry', 'A3', 'B30', 'invest_exp',
       'QK3', 'QK4', 'QK5', 'QK6', 'QK7_1', 'QK7_2', 'QK7_3', 'finlit_score', 'finlit_score_qk6cond', 'AC1_resp', 'AC1_pass',
       'baseline_pred', 'self_T0', 't_explanation']);
