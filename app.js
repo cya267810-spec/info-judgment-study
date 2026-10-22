@@ -555,8 +555,7 @@
     var pool = C.POOL, ids;
     if (MODE === 'pretest') ids = pool.map(function (p) { return p.id; });
     else if (CFG.FINAL_ITEMS && CFG.FINAL_ITEMS.length) ids = CFG.FINAL_ITEMS.slice();
-    else ids = pool.filter(function (p) { return p.answer === 'scam'; }).slice(0, 10).map(function (p) { return p.id; })
-      .concat(pool.filter(function (p) { return p.answer === 'real'; }).slice(0, 10).map(function (p) { return p.id; }));
+    else ids = CFG.FALLBACK_ITEMS.slice();   // 答案不在網頁裡（2026-10-20），暫用題目改為固定代碼清單
     return CFG.JUDGMENT_ORDER === 'fixed' ? ids : shuffle(ids);
   }
   PAGES.P14 = function () {
@@ -586,17 +585,19 @@
       if (!requireIds(['j', 'p'])) return;
       var rt = Math.round(performance.now() - t0);
       var said = cur.j === JC.yes ? 1 : 0;
-      J.ans[id] = { j: said, prob: cur.p, correct: (said === 1) === (item.answer === 'scam') ? 1 : 0, rt: rt + (prev ? prev.rt : 0), pos: J.i + 1,
+      // 答對與否不在網頁計算：Apps Script 依答案表算出 correct、J_correct_*、n_correct（apps_script/Code.gs）
+      J.ans[id] = { j: said, prob: cur.p, rt: rt + (prev ? prev.rt : 0), pos: J.i + 1,
         refreshed: J.refreshedAt === J.i ? 1 : 0, visits: (prev ? prev.visits || 1 : 0) + 1 };
       sendPage('P14_' + id, J.ans[id]);
       J.i += 1; save(); window.scrollTo(0, 0); PAGES.P14();
     });
   };
   function finishJudgment() {
-    var J = rec.judge, d = { J_order: J.order.join('|'), n_items: J.order.length }, nc = 0, probs = [];
-    J.order.forEach(function (id) { var a = J.ans[id]; nc += a.correct; probs.push(a.prob); });
+    var J = rec.judge, d = { J_order: J.order.join('|'), n_items: J.order.length }, probs = [];
+    J.order.forEach(function (id) { probs.push(J.ans[id].prob); });
     var best = 0, run = 0; probs.forEach(function (p, k) { run = (k > 0 && p === probs[k - 1]) ? run + 1 : 1; best = Math.max(best, run); });
-    d.n_correct = nc; d.longstring_prob = best;
+    d.longstring_prob = best;
+    d.J_resp = J.order.map(function (id) { return id + ':' + J.ans[id].j; }).join('|');   // 供 Apps Script 計算 n_correct，寫入前即移除
     finishPage('P14', d);
   }
 
@@ -650,7 +651,7 @@
     cols = cols.concat(['MC_check', 'MC_order']);
     C.KRELL.items.forEach(function (it) { cols.push('CLr_' + it.n); });
     cols = cols.concat(['CLr_ML', 'CLr_ME', 'self_T1', 'expected_pred', 'self_T1b', 'self_expl_text', 'self_expl_chars', 'self_T2', 'standard_k']);
-    POOL_IDS.forEach(function (id) { cols.push('J_' + id, 'J_prob_' + id, 'J_correct_' + id, 'J_rt_' + id, 'J_pos_' + id); });
+    POOL_IDS.forEach(function (id) { cols.push('J_' + id, 'J_prob_' + id, 'J_rt_' + id, 'J_pos_' + id); });   // Apps Script 換回原題號並補上 J_correct_*
     cols = cols.concat(['J_order', 'n_items', 'n_correct', 'longstring_prob']);
     C.KRELL.items.forEach(function (it) { cols.push('CLj_' + it.n); });
     cols = cols.concat(['CLj_ML', 'CLj_ME', 'comic_panels_seen', 'n_back', 'back_log']);
@@ -664,7 +665,7 @@
       n_back: (rec.backs || []).length, back_log: (rec.backs || []).join('|') };
     Object.keys(rec.data).forEach(function (pg) { Object.keys(rec.data[pg]).forEach(function (k) { if (!(k in r)) r[k] = rec.data[pg][k]; }); });
     if (rec.judge) Object.keys(rec.judge.ans).forEach(function (id) {
-      var a = rec.judge.ans[id]; r['J_' + id] = a.j; r['J_prob_' + id] = a.prob; r['J_correct_' + id] = a.correct; r['J_rt_' + id] = a.rt; r['J_pos_' + id] = a.pos;
+      var a = rec.judge.ans[id]; r['J_' + id] = a.j; r['J_prob_' + id] = a.prob; r['J_rt_' + id] = a.rt; r['J_pos_' + id] = a.pos;
     });
     ALL_PAGES.forEach(function (p) { if (rec.times[p] !== undefined) r['t_' + p] = rec.times[p]; });
     return r;

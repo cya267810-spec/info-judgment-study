@@ -7,9 +7,7 @@
    2026-10-18：依第三章 v11（Downloads\第三章_研究方法.docx）與附錄更新研究二流程與題項
    （Krell 認知負荷量表兩次施測、T0/T1/T1b/T2 理解自評、達成標準頁、身分與行業題、解釋滿意度量表 7 題）。
    六版文本與判斷題題池已和第三章 v11 表 3-3、附錄三核對，內容未變。
-   2026-10-18：真實訊息 G01、G03、G04、G05、G06、G08、G09、G11 依研究者決定替換為證券商官方網頁原文（同步改附錄三，本檔直接修改 POOL）。
-   2026-10-18：詐騙訊息 F02、F03、F04、F05、F07、F08、F10 與真實訊息 G02 依研究者決定替換為可逐字查證之原文（證交所反詐騙聯防專區通報、法院判決、凱基證券網頁）。
-   2026-10-18：為使題目資訊足以判斷並縮小兩類長度差距，G01、G03、G05、G06、G08、G09、G10 改為同來源較完整之連續原文，F09、F11、F12 改為判決所載較長原文；F03、F04 改為 PTT 使用者張貼之詐騙群組截圖圖片文字。
+   2026-10-20：判斷題題池的修改紀錄（含原題號與來源）移到 private/pool_changelog.txt，不上傳。
    ===================================================================== */
 window.CONTENT = {
 
@@ -19,7 +17,8 @@ window.CONTENT = {
     CONTACT_ENDPOINT: "https://script.google.com/macros/s/AKfycbzrDGDZaNDTCyT5YFW4ozYcce-jH6sVIzuYfjvDnQ8u-0DRvaJ3P2VMToYOOZbgRyRR/exec",   // 聯絡資料 Apps Script 網址（Contact.gs，2026-10-19 部署）
     SHARED_SECRET: "l7F6luw7Q4IvCCqoec5a5jT8FbW28rSw", // 兩支 Apps Script 也要填同一組
     JUDGMENT_ORDER: "random",  // 依 Kubilay et al. (2023)：訊息順序於受試者層次隨機排列
-    FINAL_ITEMS: [],           // 【待提供】前測項目分析後保留的 20 題題號，例如 ["F01","G03",...]；空白時研究一、二暫用題池前 10＋前 10
+    FINAL_ITEMS: [],           // 【待提供】前測項目分析後保留的 20 題，填中性代碼（例如 ["Q01","Q07",...]；代碼與原題號對照見 private/judge_key.json，勿填 F／G 題號）；空白時研究一、二暫用 FALLBACK_ITEMS
+    FALLBACK_ITEMS: ["Q01","Q02","Q04","Q05","Q06","Q07","Q08","Q11","Q12","Q13","Q14","Q15","Q16","Q17","Q18","Q19","Q20","Q21","Q23","Q24"], // 對照見 private/judge_key.json
     // 指導語與預估題的題數＝實際題數（Moore & Healy, 2008：預估範圍 0 到實際題數）
     N_IN_INSTRUCTIONS: { pretest: 24, s1: 20, s2: 20 },
     STANDARD_K: null,          // 【待提供】判斷任務達成標準：前測參與者在保留之 20 則正式題上的答對題數中位數（表 3-4）；研究一、二上線前必填
@@ -409,247 +408,128 @@ window.CONTENT = {
     counter: "第 {i} / {n} 則"
   },
   // 2026-10-18：判斷題改為「情境導言＋手機畫面」的完整訊息（A＝完整真實訊息逐字、B＝取材自真實案例改編），
-  // 由 samples/judge_24.html 轉入；kind／cue／source 只供研究者對照，不顯示給參與者。
+  // 2026-10-20：題號改為中性代碼 Q01–Q24；答案、題型、線索與來源移到 private/judge_key.json（不上傳），
+  // 答對與否由 Apps Script 依答案表計算（apps_script/Code.gs 的 KEY）。
   POOL: [
  {
-  "id": "F01",
-  "answer": "scam",
-  "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡出現了下面這些訊息：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">投資群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">助</div><div><div class=\"who\">助理</div><div class=\"bub\">✨後續的各種內幕操作也是直接帶所有新老會員同步操作的，不存在對新會員就有隱晦，不管是今天跟上佈局還是沒有跟上佈局的朋友大家一定要持續關注我們的【金創計劃】，大家有什麼不明白的可以私訊我唷，我替老師幫你解決問題，另外這是開戶專員的Line名片，可以先添加開通，下週資金準備好後，大家一起跟上開始新的征程，同時下週也會增加隔日沖的操作❤️</div></div><span class=\"time\">15:18</span></div>\n<div class=\"msg\"><div class=\"av\"> </div><div class=\"namecard\"><div class=\"lg\"></div><b>○○通寶-○經理</b><div class=\"jbtn\">查看個人檔案</div></div><span class=\"time\">15:18</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "L2 準備資金開戶",
-  "source": "來源：Tan1sVaca（2024 年 8 月 11 日）。Re: [新聞] 投資詐騙line群組臥底實錄。PTT 批踢踢實業坊 Stock 板。https://www.ptt.cc/bbs/Stock/M.1723358534.A.7DE.html 處理：截圖 hk98ZWe，逐字；公司與人名去識別。",
-  "sample": "F01"
- },
- {
-  "id": "F02",
-  "answer": "scam",
-  "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡出現了下面這些訊息：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">投資群組</div><div class=\"jchat\"><div class=\"msg\"><div class=\"av\">助</div><div><div class=\"who\">助理</div>\n<div class=\"imgcard red\"><div class=\"t\">新股申購</div><div class=\"pill\">投標日期：08/21~08/23</div><div class=\"pill\">【○○○○ ○○○○】</div>\n<div class=\"jrow\"><div class=\"cell\"><small>抽籤日</small>08/27</div><div class=\"cell\"><small>撥券日</small>09/02</div><div class=\"cell\"><small>承銷價</small>75</div></div>\n<div class=\"jrow\"><div class=\"cell\"><small>市價</small>134.5</div><div class=\"cell\"><small>單張獲利</small>59500</div><div class=\"cell\"><small>報酬率</small>79.3%</div></div>\n<div class=\"big\">抽中一張獲利59500</div><div class=\"big\">抽中十張獲利595000</div></div>\n</div></div></div></div>",
-  "kind": "A",
-  "cue": "L1 新股＋L5 獲利",
-  "source": "來源：Tan1sVaca（2024 年 8 月 11 日）。Re: [新聞] 投資詐騙line群組臥底實錄。PTT 批踢踢實業坊 Stock 板。https://www.ptt.cc/bbs/Stock/M.1723358534.A.7DE.html 處理：截圖 QeWi7Qq，全部文字逐字；股票名稱原圖已馬賽克。",
-  "sample": "F02"
- },
- {
-  "id": "F03",
-  "answer": "scam",
-  "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡出現了下面這些訊息：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">投資群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">助</div><div><div class=\"who\">助理</div><div class=\"bub\">🎯 ○○○○ 📈停利通知❗❗❗\n進場點位：86.4💹\n停利價位：100💯\n獲利趴數：15.7%👍\n💰恭喜跟上操作的學員~💰\n💰現在賣出獲利即可~💰\n💰也可停利一半剩餘資金賺取更多利潤💰\n🌹現在市場正處於歷史高點 上下震盪的幅度預計會更大 記得關注我的訊息 以免錯過最佳的買賣點哦🌹</div></div><span class=\"time\">09:17</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 A</div><div class=\"bub\">哈哈收到，今天又是跟著老師賺飽飽的一天</div></div><span class=\"time\">09:22</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 B</div><div class=\"bub\">老師太厲害了</div></div><span class=\"time\">09:26</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 C</div><div class=\"bub\">○○賺兩個漲停板👍</div></div><span class=\"time\">09:30</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 D</div><div class=\"bub\">老師昨天沒有停利是因為有提前知道內線消息嗎</div></div><span class=\"time\">09:34</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 E</div><div class=\"bub\">我想應該是的，不然怎麼會把握的這麼精準</div></div><span class=\"time\">09:38</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 F</div><div class=\"bub\">這要是說老師沒點內線消息 我都不信</div></div><span class=\"time\">09:43</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "L3 曬獲利＋內線消息",
-  "source": "來源：Tan1sVaca（2024 年 8 月 11 日）。Re: [新聞] 投資詐騙line群組臥底實錄。PTT 批踢踢實業坊 Stock 板。https://www.ptt.cc/bbs/Stock/M.1723358534.A.7DE.html 處理：截圖 blXZ7Hc，逐字；股票名稱原圖已馬賽克，成員名稱去識別。",
-  "sample": "F03"
- },
- {
-  "id": "F04",
-  "answer": "scam",
-  "ctx": "你在 LINE 收到下面這則私訊：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">○經理</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">您好，我是○○通寶證券的開戶專員○經理，很高興為您服務，請問您是需要開通帳戶，對嗎？</div><span class=\"time\">18:02</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:30</span><div class=\"bub\">要如何參與金創計劃呢？</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">您了解這個金創計劃嗎？如果不了解，您可以向○○助理了解下，再來找我開戶</div><span class=\"time\">18:33</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:34</span><div class=\"bub\">已了解了</div></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:35</span><div class=\"bub\">如何開戶呢？</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">您是安卓手機 還是蘋果手機</div><span class=\"time\">18:35</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:35</span><div class=\"bub\">安卓</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">1.點選○○通寶證券開戶推薦連結（複製到google打開），進入○○通寶證券上開戶頁面並透過手機下載○○通寶證券-「線上開戶」APP\nhttps://app.○○○○.top/○○○○/<div class=\"linkcard\"><b>GoFPB</b><br>GoFPB 大小：5M ?安全認證 免費安裝 4.9 5230個評分 18+ 年齡 1、安卓手...</div></div><span class=\"time\">18:36</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">下載好之後和我說，我教您進行帳戶註冊</div><span class=\"time\">18:36</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "L2 非正規平台開戶",
-  "source": "來源：Tan1sVaca（2024 年 8 月 11 日）。Re: [新聞] 投資詐騙line群組臥底實錄。PTT 批踢踢實業坊 Stock 板。https://www.ptt.cc/bbs/Stock/M.1723358534.A.7DE.html 處理：截圖 sjtq5kA，逐字；公司、人名去識別，網址遮蔽；省略兩張 App 頁面截圖。綠色對話框為收訊者（發文者臥底）的回覆。",
-  "sample": "F04"
- },
- {
-  "id": "F05",
-  "answer": "scam",
-  "ctx": "你在 LINE 收到下面這則私訊：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div style=\"align-self:center;background:rgba(0,0,0,.18);color:#fff;border-radius:999px;font-size:11px;padding:2px 10px\">今天</div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">早安，我是○○○，請問你是來領取飆股還是有持股需要診斷？</div><span class=\"time\">上午 8:34</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀<br>下午 1:23</span><div class=\"bub\">是 飆股 嗎？</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">對，請問是來領取飆股還是有持股需要診斷？</div><span class=\"time\">下午 1:26</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀<br>下午 1:27</span><div class=\"bub\">飆股</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">每日9點前 我的助理會在群組公佈 我精選的飆股。不管是停利還是停損，也會讓助理第一時間傳給大家。你可以先加下我的助理</div><span class=\"time\">下午 1:28</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"namecard\" style=\"text-align:left;display:flex;align-items:center;gap:8px\"><div class=\"av\" style=\"flex:0 0 30px;height:30px\">○</div>○○○　›</div><span class=\"time\">下午 1:28</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "免費飆股＋轉加助理",
-  "source": "來源：Cofacts 真的假的（2023 年 4 月 18 日 使用者回報）。可疑訊息 z_lClIcBn6k8q-JUB9s2。2026 年 10 月 19 日擷取自 https://cofacts.tw/article/z_lClIcBn6k8q-JUB9s2 處理：使用者上傳的 LINE 私訊截圖，從第一句到最後一句全部逐字，含收訊者的兩句回覆與最後的好友名片；寄件者與助理名稱去識別（原署名冒用知名人士姓名）。Cofacts 尚無查核回應。",
-  "sample": "F05"
- },
- {
-  "id": "F06",
-  "answer": "scam",
-  "ctx": "你在 LINE 收到下面這則私訊：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">股市聯合資訊</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">股</div><div class=\"bub\">我這邊跟您說，『○○目前已經公發了，準備在今年第三季掛牌』，所以目前有很多創投公司都會把這個投資的部分，都是預備在即將要掛牌的公司，納（那）今天不管是您，還是我，我們都算散戶身分，因為我們沒有像財團or法人一樣的資金，我們就是跟著創投公司的腳步走，我‧才不會虧</div><span class=\"time\">10:12</span></div>\n<div class=\"msg\"><div class=\"av\">股</div><div class=\"bub\">所以這邊跟您報告，○○現在是登錄興櫃前最後一次釋股，所以目前進場有幾個利多，我稍微跟你說一下，第一就是你是既（記）名股東，不是散戶喔</div><span class=\"time\">10:13</span></div>\n<div class=\"msg\"><div class=\"av\">股</div><div class=\"bub\">原始股東的好處就是，你今天手上有10張，公司1配1，你又多10張，股票成本沒有增加</div><span class=\"time\">10:14</span></div>\n</div></div>",
-  "kind": "B",
-  "cue": "L1 未上市＋L4 最後一次釋股",
-  "source": "來源：臺灣高等法院臺中分院 112 年度金上訴字第 2827 號刑事判決（2025 年 6 月 12 日）。司法院裁判書查詢。https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=TCHM%2c112%2c%e9%87%91%e4%b8%8a%e8%a8%b4%2c2827%2c20250612%2c1 處理：B 類。判決所載扣案推銷話術教戰守則，同一段話術依序拆成 3 則，逐字（第二、三則為節錄，省略括號內的互動提示）；公司名去識別。補上：原稿的「X先生/小姐」改為「您」、時間。",
-  "sample": "F06"
- },
- {
-  "id": "F07",
-  "answer": "scam",
-  "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
-  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○證券</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">您的證券帳戶因超過三年未交易，依交易所規定：為維護帳戶安全，列入靜止戶。</div><span class=\"time\">10:12</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">請將身份證正反面拍照傳給我，以便開放帳戶，謝謝！</div><span class=\"time\">10:12</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "L2 要身分證照片",
-  "source": "來源：Cofacts 真的假的（2020 年 11 月 13 日 使用者回報）。可疑訊息 1337jegooe8r6。2026 年 10 月 19 日擷取自 https://cofacts.tw/article/1337jegooe8r6 處理：全文逐字；原訊息兩行，分成兩個對話框；帳號名稱去識別。Cofacts 查核回應判定為詐騙。",
-  "sample": "F07"
- },
- {
-  "id": "F08",
-  "answer": "scam",
-  "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
-  "html": "<div class=\"jphone oa\"><div class=\"jbar\">台股○○孝親團</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">台</div><div class=\"bub\">您好，歡迎來到台股○○孝親團，這裡是加入社群負責審核的窗口，群內服務包括：\n\n🌟投資資訊交流\n🌟每日台股推薦\n🌟留倉股票諮詢\n🌟財經講師技術教學分享\n🔥金融市場內幕消息\n🔥線上直播教學</div><span class=\"time\">20:05</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "內幕消息＋每日推薦",
-  "source": "來源：Cofacts 真的假的（2022 年 10 月 19 日 使用者回報）。可疑訊息 3bg5rfenvudrb。2026 年 10 月 19 日擷取自 https://cofacts.tw/article/3bg5rfenvudrb 處理：全文逐字（原訊息即為一則）；名稱去識別。Cofacts 尚無查核回應，研究者依其以「金融市場內幕消息」招攬判定為詐騙。",
-  "sample": "F08"
- },
- {
-  "id": "F09",
-  "answer": "scam",
-  "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
-  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○投資 在線客服</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">客</div><div class=\"bub\">○○○先生您好,恭喜您\n中籤 ○○○○2張,\n需繳納60000,手續費180,合計60180.今天是最後一個繳款日,請您盡快繳清中籤款</div><span class=\"time\">10:38</span></div>\n<div class=\"msg\"><div class=\"av\">客</div><div class=\"bub\">您好,我們平台都有您的實名以及抽籤記錄的,您如果不認繳產生的後果您需要自行負責的!中籤是很好的事情,中的多就賺的多,請您盡快繳清中籤款項,使帳戶正常操作噢!</div><span class=\"time\">10:46</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "L1 中籤＋L2 繳款＋L4 最後一天",
-  "source": "來源：Cofacts 真的假的（2023 年 3 月 8 日 使用者回報）。可疑訊息 C_x4wIYBC7Q3lHuU-FH9。2026 年 10 月 19 日擷取自 https://cofacts.tw/article/C_x4wIYBC7Q3lHuU-FH9 處理：使用者上傳的 LINE 截圖，客服的兩則訊息逐字；被害人的兩句提問省略；人名、公司名、股票名去識別。Cofacts 查核回應判定為詐騙。",
-  "sample": "F09"
- },
- {
-  "id": "F10",
-  "answer": "scam",
+  "id": "Q01",
   "ctx": "你在滑手機時，看到下面這則貼文：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">Facebook</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\">股市</div><div>股市爆料同學會<small>贊助</small></div></div>\n<div class=\"txt\">這檔目標價100塊起\n現價才3.71塊\n營收非常強，隔日沖籌碼洗得算乾淨\n外資大買，題材加持 族群表現依然強勁\n禮拜一當沖，短線，長線都值得購入...... 查看更多</div>\n<img src=\"judge_img/s1_chart.jpg\" alt=\"\" style=\"width:100%;display:block;border-radius:4px\">\n<div class=\"foot\">FACEBOOK 表單<br><b>歡迎加入股市爆料同學會領取更多潛力股明牌✔️</b><br>👇加入同學會即可提前免費領取同學會的6檔AI概念股，私訊我回復\"領取\"即可...</div>\n</div></div>",
-  "kind": "A",
-  "cue": "L5 高報酬明牌",
-  "source": "來源：Tan1sVaca（2024 年 8 月 11 日）。Re: [新聞] 投資詐騙line群組臥底實錄。PTT 批踢踢實業坊 Stock 板。https://www.ptt.cc/bbs/Stock/M.1723358534.A.7DE.html 處理：截圖 lFOT69C，文字逐字，走勢圖直接裁自原截圖。",
-  "sample": "F10"
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">Facebook</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\">股市</div><div>股市爆料同學會<small>贊助</small></div></div>\n<div class=\"txt\">這檔目標價100塊起\n現價才3.71塊\n營收非常強，隔日沖籌碼洗得算乾淨\n外資大買，題材加持 族群表現依然強勁\n禮拜一當沖，短線，長線都值得購入...... 查看更多</div>\n<img src=\"judge_img/q_01.jpg\" alt=\"\" style=\"width:100%;display:block;border-radius:4px\">\n<div class=\"foot\">FACEBOOK 表單<br><b>歡迎加入股市爆料同學會領取更多潛力股明牌✔️</b><br>👇加入同學會即可提前免費領取同學會的6檔AI概念股，私訊我回復\"領取\"即可...</div>\n</div></div>"
  },
  {
-  "id": "F11",
-  "answer": "scam",
-  "ctx": "你在滑手機時，看到下面這則貼文：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">Facebook</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\">證券</div><div>○○證券 - ○○○<small>3月31日</small></div></div>\n<div class=\"txt\">【限時免費領取大盤優股】\n股海茫茫，你還在漂泊不定嗎？\n趕快加入好友跟著大佬一起學投資吧！\n🔥免費個股健檢🔥\n🔥盤前盤後分析🔥\n🔥每日優股分享🔥\n❗更多福利 加緊關注❗\n\n❗❗趕快加入瞭解❗❗</div>\n<div style=\"background:linear-gradient(135deg,#d6e6f2,#f4f8fb);border:6px solid #c62020;border-radius:4px;padding:8px;position:relative\">\n <div style=\"font-size:22px;font-weight:900;color:#e0701c;letter-spacing:2px\">百人群組</div>\n <div style=\"font-size:22px;font-weight:900;color:#e0701c;letter-spacing:2px;text-align:right;margin-right:6px\">千萬創收</div>\n <div style=\"display:flex;gap:8px;margin-top:6px;align-items:flex-end\">\n  <div style=\"background:#06c755;color:#fff;border-radius:6px;padding:6px 4px;font-size:11px;font-weight:800;line-height:1.7;flex:0 0 96px;text-align:center\">\n   <div style=\"font-size:15px\">LINE</div>每日盤前分析<br>每日盤後解析<br>每日優股分享<br>在線專業解惑<br>群友討論分享</div>\n  <div style=\"flex:1;text-align:center\">\n   <div style=\"background:#fff;border-radius:10px;padding:4px;color:#1f9d4a;font-weight:900;font-size:15px;line-height:1.3\">LINE<br>限時加入</div>\n   <div style=\"margin-top:8px;display:flex;align-items:flex-end;justify-content:center;gap:4px\">\n    <div style=\"width:52px;height:64px;border-radius:26px 26px 4px 4px;background:#3b4a63\"></div>\n    <div style=\"background:#f08a24;color:#fff;font-size:10px;font-weight:800;writing-mode:vertical-rl;padding:4px 2px;border-radius:3px\">○○證券資深經理　○○○</div>\n   </div>\n  </div>\n </div>\n <div style=\"background:#c62020;color:#fff;font-weight:900;text-align:right;padding:3px 6px;margin:6px -8px -8px;font-size:14px\">○○證券</div>\n</div>\n<div class=\"foot\">MESSENGER<br><b>在 Messenger 索取更多老朋友</b>　〔發送訊息〕</div>\n</div></div>",
-  "kind": "A",
-  "cue": "冒用券商名義＋免費＋加 LINE",
-  "source": "來源：臺灣證券交易所證券反詐騙聯防行動專區（2026 年 6 月 18 日）。證券商通報專區案件 3448（亞東證券通報）附件，第 2 頁。https://cam.twse.com.tw/antifraud/download/000218_20260618140804.pdf 處理：冒名券商的臉書專頁貼文，文字與圖中文字全部逐字；圖片以模擬圖重繪（真人照片改為剪影）；券商名與人名去識別。",
-  "sample": "F11"
+  "id": "Q02",
+  "ctx": "你在滑手機時，看到下面這個網頁：",
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券 活動頁</div><div class=\"web\">\n<div class=\"banner\" style=\"background:linear-gradient(135deg,#0f766e,#115e59)\"><div class=\"big\">【新戶好禮】開戶送LINE POINTS 200點</div></div>\n<div class=\"txt\">活動期間：即日起至2025年7月18日止\n活動辦法：透過○○證券官方LINE/IG/FB等指定連結完成開戶，即贈LINE POINTS 200點。\n活動贈品限量150份。</div>\n<div class=\"dom\">event.○○.com.tw</div></div></div>"
  },
  {
-  "id": "F12",
-  "answer": "scam",
-  "ctx": "你在滑手機時，看到下面這則貼文：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">股票 期貨 外匯 基金之操作觀念</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\" style=\"background:#9aa5b1\">○</div><div>○○○<small>1月3日 · 🌐</small></div></div>\n<div class=\"txt\">散戶們聽好了！！！\n\n刷到的恭喜了，卡到這波直接可以提前過個肥年！\n\n我給的建議：\n\n鴻海（2317）232.00買了\n金居（8358）290.00買了\n群創（3481）18.10必買\n華邦電（2344）90.80必買\n力積電（6770）42.10買了\n友達（2409）12.60掛到必賺\n旺宏（2337）43.35買了\n南亞科（2408）207.00賣了\n南亞（1303）57.00快跑\n緯創（3231）155.00賣了\n富喬（1815）90.70買了必套\n華新（1605）32.90賣了\n神達（3706）90.90賣了\n方土昶（6265）33.45必買\n福懋科（8131）66.70賣了\n康舒（6282）43.80買了\n京元電子（2449）267.50趕緊進場\n元晶（6443）27.75賣了\n\n有很多股友問我：你報牌這麼准，為什麼不收費呢？\n\n因為我早已經財富自由，現在純粹交朋友分享！\n\n群組餘位僅剩26個名額！每天分享個股資料+潛力飆股📈\n\n傳訊我（2026）免費邀请你加入</div>\n<div style=\"font-size:12px;color:#777\">👍 41　　　　　　　　38則留言</div>\n</div></div>",
-  "kind": "A",
-  "cue": "L5 明牌＋L3 報牌準＋L4 名額",
-  "source": "來源：臺灣證券交易所證券反詐騙聯防行動專區（2026 年 6 月 18 日）。證券商通報專區案件 3447（亞東證券通報）附件，第 1–2 頁。https://cam.twse.com.tw/antifraud/download/000218_20260618134044.pdf 處理：臉書社團貼文全文逐字（含原文的「准」「邀请」）；發文者去識別；股票名稱為公開上市公司，保留原文。",
-  "sample": "F12"
+  "id": "Q03",
+  "ctx": "你在 LINE 收到下面這則私訊：",
+  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">以往投資人可能傾向於單一標的或短線操作，但如今，ETF定期定額已成為全民投資工具顯學，尤受年輕族群與長期儲蓄導向的投資群體所青睞。</div><span class=\"time\">20:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">如果，你還沒有出手，不妨試試「○○」這個更輕鬆的開始方式。透過小額投入，不僅能參與你看好的市場，也不用煩惱進場時機。</div><span class=\"time\">20:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">○○讓你自動扣款、自動買進，省去操作負擔，更重要的是，交易成本還更具優勢，單筆兩萬(含)內手續費１元！</div><span class=\"time\">20:01</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">現在，就從你最感興趣的ETF出發，把想法變成行動，讓資產穩穩增加。</div><span class=\"time\">20:01</span></div>\n</div></div>"
  },
  {
-  "id": "G01",
-  "answer": "real",
+  "id": "Q04",
+  "ctx": "你在滑手機時，看到下面這個網頁：",
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券交易所 公開申購</div><div class=\"web\">\n<div class=\"brand\">公開申購</div>\n<div class=\"txt\">＊ 申購人匯款作業：申購人於申購截止日前存入申請認購價款、處理費及工本費等供銀行辦理扣款，且中籤後不能放棄認購及要求退還價款，申購處理費20元，中籤通知郵寄工本費50元。\n＊ 未中籤人及不合格申購件之退款作業：證券商應於抽籤日次一營業日將郵寄工本費(50元)及認購價款退回予申購人，申購處理費(20元)不退回。</div>\n<div class=\"dom\">www.○○○○.com.tw</div></div></div>"
+ },
+ {
+  "id": "Q05",
   "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡有人分享了下面這篇文章：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">股票討論群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 A</div><div style=\"background:#fff;border-radius:12px;overflow:hidden;width:205px;font-size:12.5px\"><img src=\"judge_img/r1_cover.jpg\" alt=\"\" style=\"width:100%;display:block\"><div style=\"padding:6px 8px\"><b style=\"display:block;font-size:13px\">老牌高息ETF股利不減！ 元大高股息（0056）配發0.866元　把握10/22日前進場</b>元大高股息（0056）是台灣第一檔高股息ETF，規模僅次於0050，深受投資人青睞，目前受益人約有155萬、定期定額戶數突破27萬人。<div style=\"color:#888;font-size:11px\">○○sec.com.tw</div></div></div></div><span class=\"time\">20:15</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "L5 配息＋L4 期限",
-  "source": "來源：玉山證券（2025 年 10 月 2 日）。老牌高息ETF股利不減！ 元大高股息（0056）配發0.866元　把握10/22日前進場。2026 年 10 月 18 日擷取自 https://www.esunsec.com.tw/article/post/423 處理：標題＋重點摘要第一句，逐字；縮圖為原文章封面圖。",
-  "sample": "G01"
+  "html": "<div class=\"jphone\"><div class=\"jbar\">股票討論群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 A</div><div style=\"background:#fff;border-radius:12px;overflow:hidden;width:205px;font-size:12.5px\"><img src=\"judge_img/q_02.jpg\" alt=\"\" style=\"width:100%;display:block\"><div style=\"padding:6px 8px\"><b style=\"display:block;font-size:13px\">老牌高息ETF股利不減！ 元大高股息（0056）配發0.866元　把握10/22日前進場</b>元大高股息（0056）是台灣第一檔高股息ETF，規模僅次於0050，深受投資人青睞，目前受益人約有155萬、定期定額戶數突破27萬人。<div style=\"color:#888;font-size:11px\">○○sec.com.tw</div></div></div></div><span class=\"time\">20:15</span></div>\n</div></div>"
  },
  {
-  "id": "G02",
-  "answer": "real",
+  "id": "Q06",
+  "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
+  "html": "<div class=\"jphone oa\"><div class=\"jbar\">台股○○孝親團</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">台</div><div class=\"bub\">您好，歡迎來到台股○○孝親團，這裡是加入社群負責審核的窗口，群內服務包括：\n\n🌟投資資訊交流\n🌟每日台股推薦\n🌟留倉股票諮詢\n🌟財經講師技術教學分享\n🔥金融市場內幕消息\n🔥線上直播教學</div><span class=\"time\">20:05</span></div>\n</div></div>"
+ },
+ {
+  "id": "Q07",
   "ctx": "你在滑手機時，看到下面這個網頁：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券交易所 公開申購</div><div class=\"web\">\n<div class=\"brand\">公開申購</div>\n<div class=\"txt\">＊ 申購人匯款作業：申購人於申購截止日前存入申請認購價款、處理費及工本費等供銀行辦理扣款，且中籤後不能放棄認購及要求退還價款，申購處理費20元，中籤通知郵寄工本費50元。\n＊ 未中籤人及不合格申購件之退款作業：證券商應於抽籤日次一營業日將郵寄工本費(50元)及認購價款退回予申購人，申購處理費(20元)不退回。</div>\n<div class=\"dom\">www.○○○○.com.tw</div></div></div>",
-  "kind": "A",
-  "cue": "L2 匯款與扣款流程",
-  "source": "來源：臺灣證券交易所（無日期）。公開申購。2026 年 10 月 18 日擷取自 https://www.twse.com.tw/zh/clearing/activities/ipo.html 處理：四項說明中的第一與第三項，逐字。",
-  "sample": "G02"
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券 活動頁</div><div class=\"web\">\n<div class=\"banner\" style=\"background:linear-gradient(135deg,#2563eb,#1e40af)\"><div class=\"big\">每月都有大驚喜！</div></div>\n<div class=\"txt\">當月壽星加入○○ LINE官方帳號，優惠服務享不完\n完成申請○○證券個人化服務，月月皆享有抽獎機會！</div>\n<div class=\"dom\">www.○○.com</div></div></div>"
  },
  {
-  "id": "G03",
-  "answer": "real",
-  "ctx": "你在滑手機時，看到下面這個網頁：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">分享的網頁</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\">○○</div><div>○○證券<small>用戶故事</small></div></div>\n<div class=\"hl\">股票抽籤，讓我10天獲利20%</div>\n<div class=\"txt\">○○ (36) 上班族\n○○是一位普通上班族。在○○網站上，看到一家即將上櫃的傳產公司，發行新股開放大眾申購。</div>\n<div class=\"dom\">○○.com.tw</div>\n</div></div>",
-  "kind": "A",
-  "cue": "L1 即將上櫃＋L5",
-  "source": "來源：凱基證券（無日期）。公開申購與承銷訊息。2026 年 10 月 18 日擷取自 https://www.kgi.com.tw/zh-tw/product-overview/stock-trading/ipo 處理：用戶故事標題＋前兩行，逐字；人名、公司名去識別。",
-  "sample": "G03"
+  "id": "Q08",
+  "ctx": "你在 LINE 收到下面這則私訊：",
+  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">送出申購前，建議先確認申購標的、申購價格、扣款金額與交割帳戶餘額；送出後則可透過「我的申購」追蹤後續扣款與中籤狀態。</div><span class=\"time\">12:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">若想確認自己是否中籤，可至○○ APP 的「我的申購」查詢申購紀錄與結果。實際查詢入口與畫面，仍以 APP 最新版本為準。</div><span class=\"time\">12:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">股票抽籤一定會賺錢嗎？不一定。中籤後上市櫃股價仍可能上漲或下跌，投資人仍需自行評估風險。</div><span class=\"time\">12:01</span></div>\n</div></div>"
  },
  {
-  "id": "G04",
-  "answer": "real",
-  "ctx": "你在滑手機時，看到下面這個網頁：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券 活動頁</div><div class=\"web\">\n<div class=\"brand\">股票抽籤選○○證券</div>\n<div class=\"banner\" style=\"background:linear-gradient(135deg,#e2552b,#c2410c)\"><div>2025股票申購實績</div><div class=\"big\">申購檔數 160檔</div><div class=\"big\">最高價差 約225萬</div><div class=\"jbtn\">立即申購</div></div>\n<div class=\"txt\" style=\"font-size:11px;color:#666\">價差計算公式為抽籤日之(當日市價-承銷價)申購股數(1,000股)做為邏輯基礎</div>\n<div class=\"dom\">event.○○.com.tw</div></div></div>",
-  "kind": "A",
-  "cue": "L1 新股＋L5 價差",
-  "source": "來源：凱基證券（無日期）。股票抽籤選凱基證券。2026 年 10 月 18 日擷取自 https://event.kgi.com.tw/news/event/SS/index.html 處理：活動頁首屏文字，逐字，以網頁橫幅重繪。",
-  "sample": "G04"
+  "id": "Q09",
+  "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
+  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○證券</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">中籤不用等發薪！○○讓您一指申請抽籤資金</div><span class=\"time\">19:30</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">抽籤資金缺口？○○線上秒申請</div><span class=\"time\">19:30</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">新手好運別浪費！○○幫您準備資金來抽籤！</div><span class=\"time\">19:31</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">一杯星巴克的資金，參與抽籤超容易</div><span class=\"time\">19:31</span></div>\n</div></div>"
  },
  {
-  "id": "G05",
-  "answer": "real",
-  "ctx": "你在滑手機時，看到下面這個網頁：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券 活動頁</div><div class=\"web\">\n<div class=\"banner\" style=\"background:linear-gradient(135deg,#0f766e,#115e59)\"><div class=\"big\">【新戶好禮】開戶送LINE POINTS 200點</div></div>\n<div class=\"txt\">活動期間：即日起至2025年7月18日止\n活動辦法：透過○○證券官方LINE/IG/FB等指定連結完成開戶，即贈LINE POINTS 200點。\n活動贈品限量150份。</div>\n<div class=\"dom\">event.○○.com.tw</div></div></div>",
-  "kind": "A",
-  "cue": "L4 限量",
-  "source": "來源：凱基證券（無日期）。【新戶好禮】開戶送LINE POINTS。2026 年 10 月 18 日擷取自 https://event.kgi.com.tw/news/event/otherDocument/index.html 處理：「活動辦法」前段，逐字。",
-  "sample": "G05"
+  "id": "Q10",
+  "ctx": "你在滑手機時，看到下面這則貼文：",
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">股票 期貨 外匯 基金之操作觀念</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\" style=\"background:#9aa5b1\">○</div><div>○○○<small>1月3日 · 🌐</small></div></div>\n<div class=\"txt\">散戶們聽好了！！！\n\n刷到的恭喜了，卡到這波直接可以提前過個肥年！\n\n我給的建議：\n\n鴻海（2317）232.00買了\n金居（8358）290.00買了\n群創（3481）18.10必買\n華邦電（2344）90.80必買\n力積電（6770）42.10買了\n友達（2409）12.60掛到必賺\n旺宏（2337）43.35買了\n南亞科（2408）207.00賣了\n南亞（1303）57.00快跑\n緯創（3231）155.00賣了\n富喬（1815）90.70買了必套\n華新（1605）32.90賣了\n神達（3706）90.90賣了\n方土昶（6265）33.45必買\n福懋科（8131）66.70賣了\n康舒（6282）43.80買了\n京元電子（2449）267.50趕緊進場\n元晶（6443）27.75賣了\n\n有很多股友問我：你報牌這麼准，為什麼不收費呢？\n\n因為我早已經財富自由，現在純粹交朋友分享！\n\n群組餘位僅剩26個名額！每天分享個股資料+潛力飆股📈\n\n傳訊我（2026）免費邀请你加入</div>\n<div style=\"font-size:12px;color:#777\">👍 41　　　　　　　　38則留言</div>\n</div></div>"
  },
  {
-  "id": "G06",
-  "answer": "real",
-  "ctx": "你在滑手機時，看到下面這個網頁：",
-  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券 活動頁</div><div class=\"web\">\n<div class=\"banner\" style=\"background:linear-gradient(135deg,#2563eb,#1e40af)\"><div class=\"big\">每月都有大驚喜！</div></div>\n<div class=\"txt\">當月壽星加入○○ LINE官方帳號，優惠服務享不完\n完成申請○○證券個人化服務，月月皆享有抽獎機會！</div>\n<div class=\"dom\">www.○○.com</div></div></div>",
-  "kind": "A",
-  "cue": "誘因（抽獎）",
-  "source": "來源：富邦證券（無日期）。富邦證券 LINE官方帳號活動網頁。2026 年 10 月 18 日擷取自 https://www.fubon.com/securities/line/index.html 處理：首段，逐字。",
-  "sample": "G06"
- },
- {
-  "id": "G07",
-  "answer": "real",
+  "id": "Q11",
   "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡有人分享了下面這篇文章：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">股票討論群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 B</div><div style=\"background:#fff;border-radius:12px;overflow:hidden;width:205px;font-size:12.5px\"><div style=\"padding:6px 8px\"><b style=\"display:block;font-size:13px\">(七) 如何參與新股上市公開申購?</b>IPO股票申購　指公司經證交所或櫃買中心核准上市、上櫃之申請後，首次辦理現金增資發行股票以募集資金，透過公開管道提供投資人申購。公司為順利完成募資，股票申購的價格通常低於市場，當投資人申購的數量大於公司提出銷售的數量時，則採用公開抽籤的方式辦理。<div style=\"color:#888;font-size:11px\">shl.○○○○.com.tw</div></div></div></div><span class=\"time\">21:30</span></div>\n</div></div>",
-  "kind": "A",
-  "cue": "L1 新股價格低於市場",
-  "source": "來源：臺灣證券交易所宅在家學習網（無日期）。如何參與新股上市公開申購?。2026 年 10 月 18 日擷取自 https://shl.twse.com.tw/page/library/listed/7.html 處理：標題＋第一段，逐字；做成群組裡的連結分享卡（原網頁無封面圖）。",
-  "sample": "G07"
+  "html": "<div class=\"jphone\"><div class=\"jbar\">股票討論群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 B</div><div style=\"background:#fff;border-radius:12px;overflow:hidden;width:205px;font-size:12.5px\"><div style=\"padding:6px 8px\"><b style=\"display:block;font-size:13px\">(七) 如何參與新股上市公開申購?</b>IPO股票申購　指公司經證交所或櫃買中心核准上市、上櫃之申請後，首次辦理現金增資發行股票以募集資金，透過公開管道提供投資人申購。公司為順利完成募資，股票申購的價格通常低於市場，當投資人申購的數量大於公司提出銷售的數量時，則採用公開抽籤的方式辦理。<div style=\"color:#888;font-size:11px\">shl.○○○○.com.tw</div></div></div></div><span class=\"time\">21:30</span></div>\n</div></div>"
  },
  {
-  "id": "G08",
-  "answer": "real",
+  "id": "Q12",
+  "ctx": "你在 LINE 收到下面這則私訊：",
+  "html": "<div class=\"jphone\"><div class=\"jbar\">○經理</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">您好，我是○○通寶證券的開戶專員○經理，很高興為您服務，請問您是需要開通帳戶，對嗎？</div><span class=\"time\">18:02</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:30</span><div class=\"bub\">要如何參與金創計劃呢？</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">您了解這個金創計劃嗎？如果不了解，您可以向○○助理了解下，再來找我開戶</div><span class=\"time\">18:33</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:34</span><div class=\"bub\">已了解了</div></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:35</span><div class=\"bub\">如何開戶呢？</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">您是安卓手機 還是蘋果手機</div><span class=\"time\">18:35</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀 18:35</span><div class=\"bub\">安卓</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">1.點選○○通寶證券開戶推薦連結（複製到google打開），進入○○通寶證券上開戶頁面並透過手機下載○○通寶證券-「線上開戶」APP\nhttps://app.○○○○.top/○○○○/<div class=\"linkcard\"><b>GoFPB</b><br>GoFPB 大小：5M ?安全認證 免費安裝 4.9 5230個評分 18+ 年齡 1、安卓手...</div></div><span class=\"time\">18:36</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">下載好之後和我說，我教您進行帳戶註冊</div><span class=\"time\">18:36</span></div>\n</div></div>"
+ },
+ {
+  "id": "Q13",
   "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
-  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○證券</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">不論你是哪種投資人，○○APP都能滿足你的投資策略</div><span class=\"time\">10:00</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">只要您有下載○○就可以體驗使用囉！除此之外，您還可以選擇使用「社群帳號」登入體驗。</div><span class=\"time\">10:00</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">如果您已經是○○證券客戶，請使用「身分證字號(或統一編號)」與「網路密碼」登入使用更多功能！</div><span class=\"time\">10:01</span></div>\n</div></div>",
-  "kind": "B",
-  "cue": "L2 要求身分資料登入",
-  "source": "來源：元大證券（無日期）。元大證券投資先生-最懂你的投資專家，投資必備神器。2026 年 10 月 18 日擷取自 https://www.yuanta.com.tw/file-repository/content/mr_invest/index.html 處理：B 類。功能介紹一句＋常見問題 Q1 的回答，逐字；App 與公司名去識別。補上：帳號外框、分則、時間。",
-  "sample": "G08"
+  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○投資 在線客服</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">客</div><div class=\"bub\">○○○先生您好,恭喜您\n中籤 ○○○○2張,\n需繳納60000,手續費180,合計60180.今天是最後一個繳款日,請您盡快繳清中籤款</div><span class=\"time\">10:38</span></div>\n<div class=\"msg\"><div class=\"av\">客</div><div class=\"bub\">您好,我們平台都有您的實名以及抽籤記錄的,您如果不認繳產生的後果您需要自行負責的!中籤是很好的事情,中的多就賺的多,請您盡快繳清中籤款項,使帳戶正常操作噢!</div><span class=\"time\">10:46</span></div>\n</div></div>"
  },
  {
-  "id": "G09",
-  "answer": "real",
+  "id": "Q14",
   "ctx": "你在 LINE 收到下面這則私訊：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">台股新籤採用「先繳費，後抽籤」的方式，只要在抽籤日前一個營業日，將「申購價格x申購股數」的金額和70元(含手續費20元+50元郵資)存入帳戶即可，若沒中籤的投資人僅會被扣除申購手續費20元，券商會退回預扣的承銷價與50元郵資。</div><span class=\"time\">08:30</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">因為新股申購採用「先繳費，後抽籤」的方式，就算你不打算投資台股，也可以先開一個台股帳戶，定期申購，要留意到的是，雖然台股申購有95%在開盤賣出都能賺錢，但因為中籤率低，也要做好期望值管理。如果順利中籤，就當撿到的年終獎金吧！</div><span class=\"time\">08:30</span></div>\n</div></div>",
-  "kind": "B",
-  "cue": "L2 存入資金＋L5 獲利機率",
-  "source": "來源：凱基證券（2019 年 11 月 12 日）。「股票申購」做好這三步，多賺一筆過節費。凱基投資充電站。2026 年 10 月 18 日擷取自 https://www.kgi.com.tw/zh-tw/resources-index/article-details?id=1552ee76eb72455ab844dd7cb3b683b5&tid=bc1b63e6b0904af9965ac03e3cecb882 處理：B 類。相連兩段，逐字。補上：私訊外框、寄件者名稱、時間。",
-  "sample": "G09"
+  "html": "<div class=\"jphone\"><div class=\"jbar\">股市聯合資訊</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">股</div><div class=\"bub\">我這邊跟您說，『○○目前已經公發了，準備在今年第三季掛牌』，所以目前有很多創投公司都會把這個投資的部分，都是預備在即將要掛牌的公司，納（那）今天不管是您，還是我，我們都算散戶身分，因為我們沒有像財團or法人一樣的資金，我們就是跟著創投公司的腳步走，我‧才不會虧</div><span class=\"time\">10:12</span></div>\n<div class=\"msg\"><div class=\"av\">股</div><div class=\"bub\">所以這邊跟您報告，○○現在是登錄興櫃前最後一次釋股，所以目前進場有幾個利多，我稍微跟你說一下，第一就是你是既（記）名股東，不是散戶喔</div><span class=\"time\">10:13</span></div>\n<div class=\"msg\"><div class=\"av\">股</div><div class=\"bub\">原始股東的好處就是，你今天手上有10張，公司1配1，你又多10張，股票成本沒有增加</div><span class=\"time\">10:14</span></div>\n</div></div>"
  },
  {
-  "id": "G10",
-  "answer": "real",
+  "id": "Q15",
+  "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡出現了下面這些訊息：",
+  "html": "<div class=\"jphone\"><div class=\"jbar\">投資群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">助</div><div><div class=\"who\">助理</div><div class=\"bub\">✨後續的各種內幕操作也是直接帶所有新老會員同步操作的，不存在對新會員就有隱晦，不管是今天跟上佈局還是沒有跟上佈局的朋友大家一定要持續關注我們的【金創計劃】，大家有什麼不明白的可以私訊我唷，我替老師幫你解決問題，另外這是開戶專員的Line名片，可以先添加開通，下週資金準備好後，大家一起跟上開始新的征程，同時下週也會增加隔日沖的操作❤️</div></div><span class=\"time\">15:18</span></div>\n<div class=\"msg\"><div class=\"av\"> </div><div class=\"namecard\"><div class=\"lg\"></div><b>○○通寶-○經理</b><div class=\"jbtn\">查看個人檔案</div></div><span class=\"time\">15:18</span></div>\n</div></div>"
+ },
+ {
+  "id": "Q16",
   "ctx": "你在 LINE 收到下面這則私訊：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">送出申購前，建議先確認申購標的、申購價格、扣款金額與交割帳戶餘額；送出後則可透過「我的申購」追蹤後續扣款與中籤狀態。</div><span class=\"time\">12:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">若想確認自己是否中籤，可至○○ APP 的「我的申購」查詢申購紀錄與結果。實際查詢入口與畫面，仍以 APP 最新版本為準。</div><span class=\"time\">12:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">股票抽籤一定會賺錢嗎？不一定。中籤後上市櫃股價仍可能上漲或下跌，投資人仍需自行評估風險。</div><span class=\"time\">12:01</span></div>\n</div></div>",
-  "kind": "B",
-  "cue": "L2 扣款",
-  "source": "來源：永豐金證券（2026 年 10 月）。股票抽籤｜申購流程、扣款費用與中籤查詢教學。2026 年 10 月 18 日擷取自 https://www.sinotrade.com.tw/richclub/invest/guide/ipo-subscription 處理：B 類。三句，逐字（第三則為常見問題 Q5 的問與答）；App 名去識別。補上：私訊外框、寄件者名稱、時間。",
-  "sample": "G10"
+  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div style=\"align-self:center;background:rgba(0,0,0,.18);color:#fff;border-radius:999px;font-size:11px;padding:2px 10px\">今天</div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">早安，我是○○○，請問你是來領取飆股還是有持股需要診斷？</div><span class=\"time\">上午 8:34</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀<br>下午 1:23</span><div class=\"bub\">是 飆股 嗎？</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">對，請問是來領取飆股還是有持股需要診斷？</div><span class=\"time\">下午 1:26</span></div>\n<div class=\"msg me\"><span class=\"time\">已讀<br>下午 1:27</span><div class=\"bub\">飆股</div></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">每日9點前 我的助理會在群組公佈 我精選的飆股。不管是停利還是停損，也會讓助理第一時間傳給大家。你可以先加下我的助理</div><span class=\"time\">下午 1:28</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"namecard\" style=\"text-align:left;display:flex;align-items:center;gap:8px\"><div class=\"av\" style=\"flex:0 0 30px;height:30px\">○</div>○○○　›</div><span class=\"time\">下午 1:28</span></div>\n</div></div>"
  },
  {
-  "id": "G11",
-  "answer": "real",
+  "id": "Q17",
+  "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡出現了下面這些訊息：",
+  "html": "<div class=\"jphone\"><div class=\"jbar\">投資群組</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">助</div><div><div class=\"who\">助理</div><div class=\"bub\">🎯 ○○○○ 📈停利通知❗❗❗\n進場點位：86.4💹\n停利價位：100💯\n獲利趴數：15.7%👍\n💰恭喜跟上操作的學員~💰\n💰現在賣出獲利即可~💰\n💰也可停利一半剩餘資金賺取更多利潤💰\n🌹現在市場正處於歷史高點 上下震盪的幅度預計會更大 記得關注我的訊息 以免錯過最佳的買賣點哦🌹</div></div><span class=\"time\">09:17</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 A</div><div class=\"bub\">哈哈收到，今天又是跟著老師賺飽飽的一天</div></div><span class=\"time\">09:22</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 B</div><div class=\"bub\">老師太厲害了</div></div><span class=\"time\">09:26</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 C</div><div class=\"bub\">○○賺兩個漲停板👍</div></div><span class=\"time\">09:30</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 D</div><div class=\"bub\">老師昨天沒有停利是因為有提前知道內線消息嗎</div></div><span class=\"time\">09:34</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 E</div><div class=\"bub\">我想應該是的，不然怎麼會把握的這麼精準</div></div><span class=\"time\">09:38</span></div>\n<div class=\"msg\"><div class=\"av\">會</div><div><div class=\"who\">會員 F</div><div class=\"bub\">這要是說老師沒點內線消息 我都不信</div></div><span class=\"time\">09:43</span></div>\n</div></div>"
+ },
+ {
+  "id": "Q18",
   "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
-  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○證券</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">中籤不用等發薪！○○讓您一指申請抽籤資金</div><span class=\"time\">19:30</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">抽籤資金缺口？○○線上秒申請</div><span class=\"time\">19:30</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">新手好運別浪費！○○幫您準備資金來抽籤！</div><span class=\"time\">19:31</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">一杯星巴克的資金，參與抽籤超容易</div><span class=\"time\">19:31</span></div>\n</div></div>",
-  "kind": "B",
-  "cue": "L2 借資金抽籤",
-  "source": "來源：凱基證券（無日期）。股票抽籤選凱基證券。2026 年 10 月 18 日擷取自 https://event.kgi.com.tw/news/event/SS/index.html 處理：B 類。活動頁中的四句標語，逐字。補上：帳號外框、分則、時間。",
-  "sample": "G11"
+  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○證券</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">不論你是哪種投資人，○○APP都能滿足你的投資策略</div><span class=\"time\">10:00</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">只要您有下載○○就可以體驗使用囉！除此之外，您還可以選擇使用「社群帳號」登入體驗。</div><span class=\"time\">10:00</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">如果您已經是○○證券客戶，請使用「身分證字號(或統一編號)」與「網路密碼」登入使用更多功能！</div><span class=\"time\">10:01</span></div>\n</div></div>"
  },
  {
-  "id": "G12",
-  "answer": "real",
+  "id": "Q19",
+  "ctx": "你加入了一個 LINE 股票討論群組。某天，群組裡出現了下面這些訊息：",
+  "html": "<div class=\"jphone\"><div class=\"jbar\">投資群組</div><div class=\"jchat\"><div class=\"msg\"><div class=\"av\">助</div><div><div class=\"who\">助理</div>\n<div class=\"imgcard red\"><div class=\"t\">新股申購</div><div class=\"pill\">投標日期：08/21~08/23</div><div class=\"pill\">【○○○○ ○○○○】</div>\n<div class=\"jrow\"><div class=\"cell\"><small>抽籤日</small>08/27</div><div class=\"cell\"><small>撥券日</small>09/02</div><div class=\"cell\"><small>承銷價</small>75</div></div>\n<div class=\"jrow\"><div class=\"cell\"><small>市價</small>134.5</div><div class=\"cell\"><small>單張獲利</small>59500</div><div class=\"cell\"><small>報酬率</small>79.3%</div></div>\n<div class=\"big\">抽中一張獲利59500</div><div class=\"big\">抽中十張獲利595000</div></div>\n</div></div></div></div>"
+ },
+ {
+  "id": "Q20",
+  "ctx": "你在滑手機時，看到下面這個網頁：",
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">○○證券 活動頁</div><div class=\"web\">\n<div class=\"brand\">股票抽籤選○○證券</div>\n<div class=\"banner\" style=\"background:linear-gradient(135deg,#e2552b,#c2410c)\"><div>2025股票申購實績</div><div class=\"big\">申購檔數 160檔</div><div class=\"big\">最高價差 約225萬</div><div class=\"jbtn\">立即申購</div></div>\n<div class=\"txt\" style=\"font-size:11px;color:#666\">價差計算公式為抽籤日之(當日市價-承銷價)申購股數(1,000股)做為邏輯基礎</div>\n<div class=\"dom\">event.○○.com.tw</div></div></div>"
+ },
+ {
+  "id": "Q21",
+  "ctx": "你加了一個證券相關的 LINE 帳號。今天收到下面的訊息：",
+  "html": "<div class=\"jphone oa\"><div class=\"jbar\">○○證券</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">您的證券帳戶因超過三年未交易，依交易所規定：為維護帳戶安全，列入靜止戶。</div><span class=\"time\">10:12</span></div>\n<div class=\"msg\"><div class=\"av\">證</div><div class=\"bub\">請將身份證正反面拍照傳給我，以便開放帳戶，謝謝！</div><span class=\"time\">10:12</span></div>\n</div></div>"
+ },
+ {
+  "id": "Q22",
+  "ctx": "你在滑手機時，看到下面這則貼文：",
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">Facebook</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\">證券</div><div>○○證券 - ○○○<small>3月31日</small></div></div>\n<div class=\"txt\">【限時免費領取大盤優股】\n股海茫茫，你還在漂泊不定嗎？\n趕快加入好友跟著大佬一起學投資吧！\n🔥免費個股健檢🔥\n🔥盤前盤後分析🔥\n🔥每日優股分享🔥\n❗更多福利 加緊關注❗\n\n❗❗趕快加入瞭解❗❗</div>\n<div style=\"background:linear-gradient(135deg,#d6e6f2,#f4f8fb);border:6px solid #c62020;border-radius:4px;padding:8px;position:relative\">\n <div style=\"font-size:22px;font-weight:900;color:#e0701c;letter-spacing:2px\">百人群組</div>\n <div style=\"font-size:22px;font-weight:900;color:#e0701c;letter-spacing:2px;text-align:right;margin-right:6px\">千萬創收</div>\n <div style=\"display:flex;gap:8px;margin-top:6px;align-items:flex-end\">\n  <div style=\"background:#06c755;color:#fff;border-radius:6px;padding:6px 4px;font-size:11px;font-weight:800;line-height:1.7;flex:0 0 96px;text-align:center\">\n   <div style=\"font-size:15px\">LINE</div>每日盤前分析<br>每日盤後解析<br>每日優股分享<br>在線專業解惑<br>群友討論分享</div>\n  <div style=\"flex:1;text-align:center\">\n   <div style=\"background:#fff;border-radius:10px;padding:4px;color:#1f9d4a;font-weight:900;font-size:15px;line-height:1.3\">LINE<br>限時加入</div>\n   <div style=\"margin-top:8px;display:flex;align-items:flex-end;justify-content:center;gap:4px\">\n    <div style=\"width:52px;height:64px;border-radius:26px 26px 4px 4px;background:#3b4a63\"></div>\n    <div style=\"background:#f08a24;color:#fff;font-size:10px;font-weight:800;writing-mode:vertical-rl;padding:4px 2px;border-radius:3px\">○○證券資深經理　○○○</div>\n   </div>\n  </div>\n </div>\n <div style=\"background:#c62020;color:#fff;font-weight:900;text-align:right;padding:3px 6px;margin:6px -8px -8px;font-size:14px\">○○證券</div>\n</div>\n<div class=\"foot\">MESSENGER<br><b>在 Messenger 索取更多老朋友</b>　〔發送訊息〕</div>\n</div></div>"
+ },
+ {
+  "id": "Q23",
   "ctx": "你在 LINE 收到下面這則私訊：",
-  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">以往投資人可能傾向於單一標的或短線操作，但如今，ETF定期定額已成為全民投資工具顯學，尤受年輕族群與長期儲蓄導向的投資群體所青睞。</div><span class=\"time\">20:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">如果，你還沒有出手，不妨試試「○○」這個更輕鬆的開始方式。透過小額投入，不僅能參與你看好的市場，也不用煩惱進場時機。</div><span class=\"time\">20:00</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">○○讓你自動扣款、自動買進，省去操作負擔，更重要的是，交易成本還更具優勢，單筆兩萬(含)內手續費１元！</div><span class=\"time\">20:01</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">現在，就從你最感興趣的ETF出發，把想法變成行動，讓資產穩穩增加。</div><span class=\"time\">20:01</span></div>\n</div></div>",
-  "kind": "B",
-  "cue": "L3 全民都在做＋L4 還沒出手",
-  "source": "來源：玉山證券（2025 年 9 月 10 日）。存股熱潮狂燒！0050定期定額戶數挑戰50萬大關 還有這些人氣ETF你跟上了嗎？2026 年 10 月 18 日擷取自 https://www.esunsec.com.tw/article/post/405 處理：B 類。兩段中的四句，逐字；產品名「台股ｅ指存」去識別。補上：私訊外框、寄件者名稱、分則、時間。",
-  "sample": "G12"
+  "html": "<div class=\"jphone\"><div class=\"jbar\">○○○</div><div class=\"jchat\">\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">台股新籤採用「先繳費，後抽籤」的方式，只要在抽籤日前一個營業日，將「申購價格x申購股數」的金額和70元(含手續費20元+50元郵資)存入帳戶即可，若沒中籤的投資人僅會被扣除申購手續費20元，券商會退回預扣的承銷價與50元郵資。</div><span class=\"time\">08:30</span></div>\n<div class=\"msg\"><div class=\"av\">○</div><div class=\"bub\">因為新股申購採用「先繳費，後抽籤」的方式，就算你不打算投資台股，也可以先開一個台股帳戶，定期申購，要留意到的是，雖然台股申購有95%在開盤賣出都能賺錢，但因為中籤率低，也要做好期望值管理。如果順利中籤，就當撿到的年終獎金吧！</div><span class=\"time\">08:30</span></div>\n</div></div>"
+ },
+ {
+  "id": "Q24",
+  "ctx": "你在滑手機時，看到下面這個網頁：",
+  "html": "<div class=\"jphone\"><div class=\"jbar fb\">分享的網頁</div><div class=\"post\">\n<div class=\"src\"><div class=\"logo\">○○</div><div>○○證券<small>用戶故事</small></div></div>\n<div class=\"hl\">股票抽籤，讓我10天獲利20%</div>\n<div class=\"txt\">○○ (36) 上班族\n○○是一位普通上班族。在○○網站上，看到一家即將上櫃的傳產公司，發行新股開放大眾申購。</div>\n<div class=\"dom\">○○.com.tw</div>\n</div></div>"
  }
 ],
 
